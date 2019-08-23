@@ -14,9 +14,9 @@ import java.util.Locale;
 
 public class GetAddressTask extends AsyncTask<String, Void, String> {
 
-    private MapsActivity activity;
+    private MapActivity activity;
 
-    public GetAddressTask(MapsActivity activity) {
+    public GetAddressTask(MapActivity activity) {
         super();
         this.activity = activity;
     }
@@ -45,8 +45,8 @@ public class GetAddressTask extends AsyncTask<String, Void, String> {
             //get place Name
             String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
 
-            return "Street: " + address + "\n" + "City/Province: " + province + "\nCountry: " + country
-                    + "\nPostal CODE: " + postalCode + "\n" + "Place Name: " + knownName;
+            return "Street: " + address + "\n" + "City/Province: " + province + "\nCountry: " + country;
+
 
         } catch (IOException ex) {
             ex.printStackTrace();
