@@ -1,6 +1,7 @@
 package com.example.t420.updatelocation;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -89,47 +91,6 @@ public class MapActivity extends AppCompatActivity
 
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFrag.getMapAsync(this);
-
-        final EditText locationSearch = (EditText) findViewById(R.id.editText);
-
-        locationSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String location = locationSearch.getText().toString();
-                List<Address> addressList = null;
-
-                if (location != null || !location.equals("")) {
-                    Geocoder geocoder = new Geocoder(MapActivity.this);
-                    try {
-                        addressList = geocoder.getFromLocationName(location, 1);
-                        if(addressList.size()==0){
-                            return;
-                        }
-                        Address address = addressList.get(0);
-                        if(address!=null) {
-                            address = addressList.get(0);
-                            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                            mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(address.getAddressLine(0)));
-                            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        });
 
 
     }
@@ -218,7 +179,6 @@ public class MapActivity extends AppCompatActivity
     public void onPause() {
         super.onPause();
 
-        //stop location updates when Activity is no longer active
         if (mFusedLocationClient != null) {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         }
@@ -411,10 +371,12 @@ public class MapActivity extends AppCompatActivity
         if (location != null || !location.equals("")) {
             Geocoder geocoder = new Geocoder(this);
             try {
+
                 addressList = geocoder.getFromLocationName(location, 1);
                 if(addressList.size()==0){
                     return;
                 }
+                hideKeyboard(MapActivity.this);
                 Address address = addressList.get(0);
                 if(address!=null) {
                     address = addressList.get(0);
@@ -445,6 +407,16 @@ public class MapActivity extends AppCompatActivity
 
     public void onHybridMap(View view) {
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+    }
+
+
+    public  void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 
