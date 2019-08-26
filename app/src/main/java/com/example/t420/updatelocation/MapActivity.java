@@ -67,7 +67,7 @@ public class MapActivity extends AppCompatActivity
     Location mLastLocation;
     Marker mCurrLocationMarker;
     FusedLocationProviderClient mFusedLocationClient;
-    private static GoogleApiClient mGoogleApiClient;
+    private  GoogleApiClient mGoogleApiClient;
     private static final int locationDetectionRequiredPermissionsRequestCode = 100;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     ProgressDialog progressDialog;
